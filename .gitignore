@@ -1,0 +1,24 @@
+# Node dependencies
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+build/
+frontend/dist/
+
+# Python cache & virtualenv
+__pycache__/
+*.pyc
+.venv/
+venv/
+backend/__pycache__/
+
+# SQLite database
+wedding.db
+backend/wedding.db
+
+# Logs & temp files
+*.log
+.DS_Store
+Thumbs.db
