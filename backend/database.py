@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-DATABASE_URL = os.environ.get("DATABASE_URL") or "postgresql://postgres:[YOUR-PASSWORD]@db.xborpsozkzvnqouiejyy.supabase.co:5432/postgres"
+DATABASE_URL = os.environ.get("DATABASE_URL") or ""
 
 def is_postgres():
     return bool(DATABASE_URL)
