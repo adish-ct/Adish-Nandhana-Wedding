@@ -4,7 +4,7 @@ import uuid
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from database import init_db, get_db_connection
+from database import init_db, db_fetch_all, db_execute_insert
 from schemas import RSVPCreate, WishCreate
 
 app = FastAPI(
@@ -53,34 +53,21 @@ def get_wedding_info():
 # --- RSVP Endpoints ---
 @app.post("/api/rsvp")
 def create_rsvp(rsvp: RSVPCreate):
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
+    rsvp_id = db_execute_insert('''
         INSERT INTO rsvp (guest_name, email, attending, guest_count, dietary_preference, message)
         VALUES (?, ?, ?, ?, ?, ?)
     ''', (rsvp.guest_name, rsvp.email, rsvp.attending, rsvp.guest_count, rsvp.dietary_preference, rsvp.message))
-    conn.commit()
-    rsvp_id = cursor.lastrowid
-    conn.close()
     return {"status": "success", "message": "Thank you for responding!", "rsvp_id": rsvp_id}
 
 @app.get("/api/rsvp")
 def list_rsvps():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM rsvp ORDER BY created_at DESC")
-    rsvps = [dict(row) for row in cursor.fetchall()]
-    conn.close()
+    rsvps = db_fetch_all("SELECT * FROM rsvp ORDER BY created_at DESC")
     return {"total": len(rsvps), "data": rsvps}
 
 # --- Wishes Endpoints ---
 @app.get("/api/wishes")
 def get_wishes():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM wishes ORDER BY created_at DESC")
-    wishes = [dict(row) for row in cursor.fetchall()]
-    conn.close()
+    wishes = db_fetch_all("SELECT * FROM wishes ORDER BY created_at DESC")
     return {"total": len(wishes), "data": wishes}
 
 @app.post("/api/wishes")
@@ -88,25 +75,16 @@ def create_wish(wish: WishCreate):
     if not wish.sender_name.strip() or not wish.message.strip():
         raise HTTPException(status_code=400, detail="Name and Message are required")
     
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
+    wish_id = db_execute_insert('''
         INSERT INTO wishes (sender_name, relationship, message)
         VALUES (?, ?, ?)
     ''', (wish.sender_name, wish.relationship, wish.message))
-    conn.commit()
-    wish_id = cursor.lastrowid
-    conn.close()
     return {"status": "success", "message": "Your love wish has been posted!", "wish_id": wish_id}
 
 # --- Photos Endpoints ---
 @app.get("/api/photos")
 def get_photos():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM photos ORDER BY created_at DESC")
-    photos = [dict(row) for row in cursor.fetchall()]
-    conn.close()
+    photos = db_fetch_all("SELECT * FROM photos ORDER BY created_at DESC")
     return {"total": len(photos), "data": photos}
 
 @app.post("/api/photos/upload")
@@ -128,15 +106,10 @@ async def upload_photo(
         
     image_url = f"/uploads/{unique_filename}"
     
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute('''
+    photo_id = db_execute_insert('''
         INSERT INTO photos (title, category, image_url, uploaded_by)
         VALUES (?, ?, ?, ?)
     ''', (title, category, image_url, uploaded_by))
-    conn.commit()
-    photo_id = cursor.lastrowid
-    conn.close()
     
     return {
         "status": "success",
@@ -149,7 +122,11 @@ async def upload_photo(
             "uploaded_by": uploaded_by
         }
     }
-
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    import uvicorn, os
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+
+@app.get("/")
+def root():
+    return {"message": "Adish & Nandhana Wedding API"}
