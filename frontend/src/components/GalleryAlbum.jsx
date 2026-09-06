@@ -182,7 +182,7 @@ export default function GalleryAlbum({ onOpenSection, refreshTrigger }) {
               >
                 <div style={{ position: 'relative', height: '260px', overflow: 'hidden' }}>
                   <img
-                    src={photo.image_url}
+                    src={getImageUrl(photo.image_url)}
                     alt={photo.title}
                     style={{
                       width: '100%',
