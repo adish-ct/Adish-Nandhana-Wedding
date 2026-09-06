@@ -1,7 +1,9 @@
+from fastapi import staticfiles
 import os
 import shutil
 import uuid
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+
+from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from database import init_db, db_fetch_all, db_execute_insert
@@ -89,28 +91,34 @@ def get_photos():
 
 @app.post("/api/photos/upload")
 async def upload_photo(
+    request: Request,
     file: UploadFile = File(...),
     title: str = Form(...),
     category: str = Form("prewedding"),
-    uploaded_by: str = Form("Guest")
+    uploaded_by: str = Form("Guest"),
 ):
+    # Validate file type
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Only image files are allowed.")
-    
+
+    # Generate unique filename
     file_extension = os.path.splitext(file.filename)[1] or ".jpg"
     unique_filename = f"{uuid.uuid4().hex}{file_extension}"
     file_path = os.path.join(UPLOADS_DIR, unique_filename)
-    
+
+    # Save file to disk
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-        
-    image_url = f"/uploads/{unique_filename}"
-    
+
+    # Build image URL
+    image_url = f"{request.base_url}uploads/{unique_filename}"
+
+    # Insert record into database
     photo_id = db_execute_insert('''
         INSERT INTO photos (title, category, image_url, uploaded_by)
         VALUES (?, ?, ?, ?)
     ''', (title, category, image_url, uploaded_by))
-    
+
     return {
         "status": "success",
         "message": "Photo uploaded successfully!",
@@ -119,9 +127,10 @@ async def upload_photo(
             "title": title,
             "category": category,
             "image_url": image_url,
-            "uploaded_by": uploaded_by
-        }
+            "uploaded_by": uploaded_by,
+        },
     }
+
 if __name__ == "__main__":
     import uvicorn, os
     port = int(os.getenv("PORT", 8000))
