@@ -1,8 +1,8 @@
 // API Base URL configuration for local development and free cloud hosting (Render / Vercel / Netlify)
-export const API_BASE_URL = import.meta.env.VITE_API_URL || window.location.origin;
+export const API_BASE_URL = import.meta.env.BACKEND_API_URL || window.location.origin;
 
 // Media (static image) base URL – can point to a separate storage service
-export const MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_URL || '';
+export const MEDIA_BASE_URL = import.meta.env.BACKEND_API_URL || '';
 
 export const getImageUrl = (url) => {
   if (!url) return '';
