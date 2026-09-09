@@ -1,8 +1,8 @@
-// API Base URL configuration for local development and free cloud hosting (Render / Vercel / Netlify)
-export const API_BASE_URL = import.meta.env.BACKEND_API_URL || window.location.origin;
+// API Base URL configuration for production backend (Render)
+export const API_BASE_URL = "https://adish-nandhana-wedding.onrender.com";
 
-// Media (static image) base URL – can point to a separate storage service
-export const MEDIA_BASE_URL = import.meta.env.BACKEND_API_URL || '';
+// Media (static image) base URL – same as API base for this deployment
+export const MEDIA_BASE_URL = "https://adish-nandhana-wedding.onrender.com";
 
 export const getImageUrl = (url) => {
   if (!url) return '';
