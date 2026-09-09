@@ -34,6 +34,7 @@ def db_fetch_all(query: str, params: tuple = ()):
         conn.close()
 
 
+def db_execute_insert(query: str, params: tuple = ()):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
@@ -41,7 +42,7 @@ def db_fetch_all(query: str, params: tuple = ()):
             query_pg = query.replace("?", "%s") + " RETURNING id"
             cursor.execute(query_pg, params)
             result = cursor.fetchone()
-            inserted_id = result['id'] if result else None
+            inserted_id = result["id"] if result else None
         else:
             cursor.execute(query, params)
             inserted_id = cursor.lastrowid
