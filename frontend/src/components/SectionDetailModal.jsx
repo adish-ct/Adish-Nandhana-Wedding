@@ -403,7 +403,7 @@ export default function SectionDetailModal({ sectionId, onClose, onRefreshPhotos
                 >
                   <div style={{ height: '200px', overflow: 'hidden' }}>
                     <img
-                      src={photo.image_url}
+                      src={`${API_BASE_URL}${photo.image_url}`}
                       alt={photo.title}
                       style={{
                         width: '100%',
@@ -458,7 +458,7 @@ export default function SectionDetailModal({ sectionId, onClose, onRefreshPhotos
             </button>
             <div style={{ textAlign: 'center', maxWidth: '800px' }}>
               <img
-                src={selectedPhoto.image_url}
+                src={`${API_BASE_URL}${selectedPhoto.image_url}`}
                 alt={selectedPhoto.title}
                 style={{ maxWidth: '100%', maxHeight: '75vh', borderRadius: '12px' }}
               />
