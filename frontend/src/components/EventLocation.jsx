@@ -33,11 +33,8 @@ export default function EventLocation({ weddingInfo }) {
     },
   ];
 
-  const mapEmbedUrl =
-    weddingInfo?.venue?.embed_map ||
-    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125706.28669527632!2d76.21447045!3d9.9816358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b080d514abec6bf%3A0xbd582ca584583630!2sKochi%2C%20Kerala!5e0!3m2!1sen!2sin!4v1700000000000';
-
-  const mapDirectionsUrl = weddingInfo?.venue?.google_maps_url || 'https://maps.google.com/?q=Kochi+Kerala';
+  const mapEmbedUrl = weddingInfo?.venue?.embed_map || 'https://maps.app.goo.gl/JkPp3guNpNYmx9AZ9';
+  const mapDirectionsUrl = weddingInfo?.venue?.google_maps_url || 'https://maps.app.goo.gl/JkPp3guNpNYmx9AZ9';
 
   return (
     <section id="venue" style={{ padding: '100px 20px', background: '#fffbf7' }}>
