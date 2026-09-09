@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Calendar, MapPin, Sparkles } from 'lucide-react';
+import { getImageUrl } from '../config';
 
 export default function HeroCountdown({ weddingInfo }) {
   // Target date: Nov 1, 2026 10:30:00 AM IST
@@ -39,7 +40,7 @@ export default function HeroCountdown({ weddingInfo }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundImage: 'linear-gradient(rgba(13, 40, 33, 0.65), rgba(13, 40, 33, 0.75)), url("/uploads/hero_banner.jpg")',
+        backgroundImage: `linear-gradient(rgba(13, 40, 33, 0.65), rgba(13, 40, 33, 0.75)), url("${getImageUrl('/uploads/hero_banner.jpg')}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
