@@ -24,16 +24,6 @@ export const SECTION_DATA = {
     heroImage: '/uploads/engagement.jpg',
     categoryKey: 'engagement',
   },
-  bride_to_be: {
-    id: 'bride-to-be',
-    title: 'The Bride To Be',
-    subtitle: "Celebrating Nandhana's Journey",
-    quote: '"Every love story has a heroine, and today we celebrate ours."',
-    author: '— Nandhana',
-    description: "A beautiful glimpse into the bride-to-be's preparations, dreams, and moments leading up to the big day.",
-    heroImage: '/uploads/bride_to_be.jpg',
-    categoryKey: 'bride_to_be',
-  },
   prewedding: {
     id: 'prewedding',
     title: 'The Pre-Wedding Shoot Highlights',
