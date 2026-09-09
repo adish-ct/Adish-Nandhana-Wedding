@@ -154,7 +154,7 @@ export default function LoveStory({ onOpenSection }) {
                       }}
                     >
                       <img
-                        src={item.image}
+                        src={`https://adish-nandhana-wedding.onrender.com${item.image}`}
                         alt={item.title}
                         style={{
                           width: '100%',
