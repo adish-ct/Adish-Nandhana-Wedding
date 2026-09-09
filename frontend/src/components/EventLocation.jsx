@@ -33,8 +33,8 @@ export default function EventLocation({ weddingInfo }) {
     },
   ];
 
-  const mapEmbedUrl = weddingInfo?.venue?.embed_map || 'https://maps.app.goo.gl/JkPp3guNpNYmx9AZ9';
-  const mapDirectionsUrl = weddingInfo?.venue?.google_maps_url || 'https://maps.app.goo.gl/JkPp3guNpNYmx9AZ9';
+  const mapEmbedUrl = weddingInfo?.venue?.embed_map || 'https://maps.app.goo.gl/Ricf8Cuv3j9vafX19';
+  const mapDirectionsUrl = weddingInfo?.venue?.google_maps_url || 'https://maps.app.goo.gl/Ricf8Cuv3j9vafX19';
 
   return (
     <section id="venue" style={{ padding: '100px 20px', background: '#fffbf7' }}>
