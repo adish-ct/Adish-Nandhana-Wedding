@@ -33,7 +33,7 @@ def db_fetch_all(query: str, params: tuple = ()):
     finally:
         conn.close()
 
-def db_execute_insert(query: str, params: tuple = ()):
+
     conn = get_db_connection()
     try:
         cursor = conn.cursor()

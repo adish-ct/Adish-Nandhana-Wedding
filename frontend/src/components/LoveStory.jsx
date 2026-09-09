@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getImageUrl } from '../config';
 import { Heart, Calendar, Sparkles, Compass, ArrowRight } from 'lucide-react';
 
 export default function LoveStory({ onOpenSection }) {
-  const milestones = [
+const [items, setItems] = useState([
     {
       id: 'proposal',
       date: 'April 20, 2020',
       title: 'Our Relationship Began & The Proposal',
       subtitle: 'The spark that changed our lives forever',
-      description:
-        'On April 20th, 2020, our story officially began. Under magical fairy lights, Adish proposed to Nandhana. Click to view dedicated quotes and proposal photos!',
+      description: 'On April 20th, 2020, our story officially began. Under magical fairy lights, Adish proposed to Nandhana. Click to view dedicated quotes and proposal photos!',
       image: '/uploads/proposal.jpg',
       badge: 'April 20, 2020',
     },
@@ -19,8 +18,7 @@ export default function LoveStory({ onOpenSection }) {
       date: 'Engagement Day',
       title: 'The Engagement Ceremony',
       subtitle: 'Exchanging rings & sacred promises',
-      description:
-        'Draped in traditional festive grandeur, Adish & Nandhana exchanged rings amidst traditional floral decorations and family blessings. Click to view engagement photos!',
+      description: 'Draped in traditional festive grandeur, Adish & Nandhana exchanged rings amidst traditional floral decorations and family blessings. Click to view engagement photos!',
       image: '/uploads/engagement.jpg',
       badge: 'Ring Ceremony',
     },
@@ -29,8 +27,7 @@ export default function LoveStory({ onOpenSection }) {
       date: 'Pre-Wedding Shoot',
       title: 'The Pre-Wedding Photoshoot',
       subtitle: 'Capturing our love before the grand vow',
-      description:
-        'Surrounded by warm golden hour lights and scenic waterside views, we captured memories that reflect our joy. Click to view pre-wedding shoot photos!',
+      description: 'Surrounded by warm golden hour lights and scenic waterside views, we captured memories that reflect our joy. Click to view pre-wedding shoot photos!',
       image: '/uploads/prewedding_1.jpg',
       badge: 'Pre-Wedding Shoot',
     },
@@ -39,12 +36,45 @@ export default function LoveStory({ onOpenSection }) {
       date: 'November 1, 2026',
       title: 'The Wedding Day: Forever Begins',
       subtitle: 'Two souls, one lifetime of bliss',
-      description:
-        'On November 1st, 2026, surrounded by our beloved family and friends, Adish & Nandhana tie the sacred wedding knot. Click to view wedding highlights!',
+      description: 'On November 1st, 2026, surrounded by our beloved family and friends, Adish & Nandhana tie the sacred wedding knot. Click to view wedding highlights!',
       image: '/uploads/hero_banner.jpg',
       badge: 'The Big Day',
     },
-  ];
+  ]);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [targetId, setTargetId] = useState(null);
+  const [password, setPassword] = useState('');
+
+  const initiateDelete = (id) => {
+    setTargetId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+  // Send delete request to backend with password
+  try {
+    const response = await fetch(`/api/photos/${targetId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({ password })
+    });
+    if (!response.ok) {
+      const err = await response.json();
+      alert(err.detail || "Failed to delete photo");
+    } else {
+      // Remove from UI state
+      setItems(items.filter(item => item.id !== targetId));
+    }
+  } catch (e) {
+    alert("Error: " + e);
+  } finally {
+    setShowDeleteModal(false);
+    setPassword("");
+  }
+};
 
   return (
     <section id="story" style={{ padding: '100px 20px', background: '#fffbf7', position: 'relative' }}>
@@ -74,7 +104,7 @@ export default function LoveStory({ onOpenSection }) {
             }}
           />
 
-          {milestones.map((item, index) => {
+          {items.map((item, index) => {
             const isEven = index % 2 === 0;
             return (
               <div
@@ -146,25 +176,10 @@ export default function LoveStory({ onOpenSection }) {
                     </div>
 
                     {/* Image Preview inside card */}
-                    <div
-                      style={{
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        marginBottom: '16px',
-                        height: '220px',
-                      }}
-                    >
-                      <img
-                        src={getImageUrl(item.image)}
-                        alt={item.title}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          transition: 'transform 0.5s ease',
-                        }}
-                      />
-                    </div>
+                    <div style={{ position: 'relative', borderRadius: '12px', overflow: 'hidden', marginBottom: '16px', height: '220px' }}>
+  <img src={getImageUrl(item.image)} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}/>
+  <button onClick={(e) => { e.stopPropagation(); initiateDelete(item.id); }} style={{ position: 'absolute', top: '8px', right: '8px', background: 'rgba(255,0,0,0.7)', color: '#fff', border: 'none', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer' }}>Delete</button>
+</div>
 
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '16px' }}>
                       {item.description}
@@ -214,6 +229,16 @@ export default function LoveStory({ onOpenSection }) {
             );
           })}
         </div>
+{showDeleteModal && (
+  <div className="modal-backdrop" style={{ position: 'fixed', top:0, left:0, right:0, bottom:0, background:'rgba(0,0,0,0.5)', display:'flex', alignItems:'center', justifyContent:'center' }}>
+    <div className="modal-content" style={{ background:'#fff', padding:'20px', borderRadius:'8px', minWidth:'300px' }}>
+      <p>Enter password to delete photo:</p>
+      <input type="password" value={password} onChange={(e)=>setPassword(e.target.value)} style={{ width:'100%', marginBottom:'10px' }} />
+      <button onClick={confirmDelete} style={{ marginRight:'8px' }}>Confirm</button>
+      <button onClick={()=>setShowDeleteModal(false)}>Cancel</button>
+    </div>
+  </div>
+)}
       </div>
 
       <style>{`

@@ -1,4 +1,4 @@
-from fastapi import staticfiles
+
 import os
 import shutil
 import uuid
@@ -6,7 +6,7 @@ import uuid
 from fastapi import FastAPI, HTTPException, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from database import init_db, db_fetch_all, db_execute_insert
+from database import init_db, db_fetch_all, db_execute_insert, get_db_connection, is_postgres
 from schemas import RSVPCreate, WishCreate
 
 app = FastAPI(
@@ -88,6 +88,39 @@ def create_wish(wish: WishCreate):
 def get_photos():
     photos = db_fetch_all("SELECT * FROM photos ORDER BY created_at DESC")
     return {"total": len(photos), "data": photos}
+
+@app.delete("/api/photos/{photo_id}")
+def delete_photo(photo_id: int, password: str = Form(...)):
+
+    """Delete a photo after password verification."""
+    hardcoded = "Adish@Nandhu@2026"
+    if password != hardcoded:
+        raise HTTPException(status_code=403, detail="Incorrect password")
+    # Retrieve the photo record to get image URL
+    photo = db_fetch_all("SELECT * FROM photos WHERE id = ?", (photo_id,))
+    if not photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+    image_url = photo[0]["image_url"]
+    # Delete the database record
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        if is_postgres():
+            cursor.execute("DELETE FROM photos WHERE id = %s", (photo_id,))
+        else:
+            cursor.execute("DELETE FROM photos WHERE id = ?", (photo_id,))
+        conn.commit()
+    finally:
+        conn.close()
+    # Delete the file from uploads directory if it exists
+    try:
+        filename = os.path.basename(image_url)
+        file_path = os.path.join(UPLOADS_DIR, filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+    except Exception:
+        pass
+    return {"status": "success", "message": "Photo deleted"}
 
 @app.post("/api/photos/upload")
 async def upload_photo(
