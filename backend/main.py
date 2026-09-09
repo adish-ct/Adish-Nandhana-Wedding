@@ -144,7 +144,7 @@ async def upload_photo(
         shutil.copyfileobj(file.file, buffer)
 
     # Build image URL
-    image_url = f"{request.base_url}uploads/{unique_filename}"
+    image_url = f"/uploads/{unique_filename}"
 
     # Insert record into database
     photo_id = db_execute_insert('''
