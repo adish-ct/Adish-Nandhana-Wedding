@@ -1,4 +1,5 @@
 import React from 'react';
+import { getImageUrl } from '../config';
 import { Heart, Calendar, Sparkles, Compass, ArrowRight } from 'lucide-react';
 
 export default function LoveStory({ onOpenSection }) {
@@ -154,7 +155,7 @@ export default function LoveStory({ onOpenSection }) {
                       }}
                     >
                       <img
-                        src={`https://adish-nandhana-wedding.onrender.com${item.image}`}
+                        src={getImageUrl(item.image)}
                         alt={item.title}
                         style={{
                           width: '100%',
