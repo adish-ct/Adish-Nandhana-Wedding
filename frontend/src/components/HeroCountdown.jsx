@@ -40,7 +40,7 @@ export default function HeroCountdown({ weddingInfo }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundImage: `linear-gradient(rgba(13, 40, 33, 0.65), rgba(13, 40, 33, 0.75)), url("${getImageUrl('/uploads/hero_banner.jpg')}")`,
+        backgroundImage: 'linear-gradient(rgba(13, 40, 33, 0.65), rgba(13, 40, 33, 0.75)), url("https://adish-nandhana-wedding.onrender.com/uploads/hero_banner.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
