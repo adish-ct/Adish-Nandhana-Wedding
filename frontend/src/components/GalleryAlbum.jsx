@@ -182,7 +182,7 @@ export default function GalleryAlbum({ onOpenSection, refreshTrigger }) {
               >
                 <div style={{ position: 'relative', height: '260px', overflow: 'hidden' }}>
                   <img
-                    src={getImageUrl(photo.image_url)}
+                    src={`${API_BASE_URL}${photo.image_url}`}
                     alt={photo.title}
                     style={{
                       width: '100%',
@@ -307,7 +307,7 @@ export default function GalleryAlbum({ onOpenSection, refreshTrigger }) {
 
           <div style={{ maxWidth: '85vw', maxHeight: '80vh', textAlign: 'center' }}>
             <img
-              src={filteredPhotos[selectedPhotoIndex].image_url}
+              src={`${API_BASE_URL}${filteredPhotos[selectedPhotoIndex].image_url}`}
               alt={filteredPhotos[selectedPhotoIndex].title}
               style={{
                 maxWidth: '100%',

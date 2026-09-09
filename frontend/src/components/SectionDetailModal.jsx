@@ -180,7 +180,7 @@ export default function SectionDetailModal({ sectionId, onClose, onRefreshPhotos
           style={{
             position: 'relative',
             height: '340px',
-            backgroundImage: `linear-gradient(to bottom, rgba(13, 40, 33, 0.3), rgba(13, 40, 33, 0.85)), url("${section.heroImage}")`,
+            backgroundImage: `linear-gradient(to bottom, rgba(13, 40, 33, 0.3), rgba(13, 40, 33, 0.85)), url("https://adish-nandhana-wedding.onrender.com${section.heroImage}")`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             display: 'flex',
